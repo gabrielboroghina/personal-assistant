@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/font/roboto.xml" value="0.475" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.503125" />
+        <entry key="app/src/main/res/layout/fragment_conv_agent_chat.xml" value="0.36141304347826086" />
       </map>
     </option>
   </component>
