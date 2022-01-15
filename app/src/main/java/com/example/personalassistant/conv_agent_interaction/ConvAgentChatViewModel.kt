@@ -30,10 +30,10 @@ class ConvAgentChatViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val result = ConvAgentApi.retrofitService.postMessageAndGetReply()
-                chatMessages.value?.add(result.text)
+//                val nluRes = ConvAgentApi.retrofitService.nluProcess()
+//                val result = ConvAgentApi.retrofitService.postMessageAndGetReply()
+                chatMessages.value?.add("TODO result")
                 agentResponseStatus.value = null
-                throw Exception("ceva fain")
             } catch (e: Exception) {
                 agentResponseStatus.value = "Conv agent API failure: ${e.message}"
             }

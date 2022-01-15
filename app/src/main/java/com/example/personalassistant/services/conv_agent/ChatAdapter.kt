@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.personalassistant.R
+import com.example.personalassistant.databinding.ActionSelectionBinding
 import com.example.personalassistant.databinding.MessageBubbleBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +18,7 @@ import kotlinx.coroutines.withContext
 private val ITEM_VIEW_TYPE_ACTION = 0
 private val ITEM_VIEW_TYPE_MSG = 1
 
-class ChatAdapter : ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallback()) {
+class ChatAdapter(val linkPhotoListener: View.OnClickListener) : ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
@@ -36,9 +37,12 @@ class ChatAdapter : ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallback(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ViewHolder -> {
+            is MessageViewHolder -> {
                 val item = getItem(position) as DataItem.MessageItem
                 holder.bind(item.message)
+            }
+            is ActionsViewHolder -> {
+                holder.bind(linkPhotoListener)
             }
         }
     }
@@ -46,7 +50,7 @@ class ChatAdapter : ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallback(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ITEM_VIEW_TYPE_ACTION -> ActionsViewHolder.from(parent)
-            ITEM_VIEW_TYPE_MSG -> ViewHolder.from(parent)
+            ITEM_VIEW_TYPE_MSG -> MessageViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType ${viewType}")
         }
     }
@@ -58,19 +62,24 @@ class ChatAdapter : ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallback(
         }
     }
 
-    class ActionsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ActionsViewHolder private constructor(val binding: ActionSelectionBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(linkPhotoListener: View.OnClickListener) {
+            binding.actionTakePhoto.setOnClickListener(linkPhotoListener)
+            binding.executePendingBindings()
+        }
+
         companion object {
             fun from(parent: ViewGroup): ActionsViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater.inflate(R.layout.action_selection, parent, false)
-                return ActionsViewHolder(view)
+                val binding = ActionSelectionBinding.inflate(layoutInflater, parent, false)
+                return ActionsViewHolder(binding)
             }
         }
     }
 
 
-    class ViewHolder private constructor(val binding: MessageBubbleBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class MessageViewHolder private constructor(val binding: MessageBubbleBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(message: String) {
             binding.message.text = message
@@ -78,10 +87,10 @@ class ChatAdapter : ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallback(
         }
 
         companion object {
-            fun from(parent: ViewGroup): ViewHolder {
+            fun from(parent: ViewGroup): MessageViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = MessageBubbleBinding.inflate(layoutInflater, parent, false)
-                return ViewHolder(binding)
+                return MessageViewHolder(binding)
             }
         }
     }
@@ -111,4 +120,3 @@ sealed class DataItem {
 
     abstract val id: String
 }
-

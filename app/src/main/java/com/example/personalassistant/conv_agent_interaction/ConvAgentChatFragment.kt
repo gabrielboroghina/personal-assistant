@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -36,7 +37,11 @@ class ConvAgentChatFragment : Fragment() {
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
 
-        val adapter = ChatAdapter()
+        val linkPhotoListener: View.OnClickListener = View.OnClickListener {
+            Toast.makeText(view?.context, "clicked link photo", Toast.LENGTH_SHORT).show()
+        }
+
+        val adapter = ChatAdapter(linkPhotoListener)
         binding.chat.adapter = adapter
 
         viewModel.chatMessages.observe(viewLifecycleOwner) {
