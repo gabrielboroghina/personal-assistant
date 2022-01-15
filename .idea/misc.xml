@@ -3,10 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/msg_bubble_shape.xml" value="0.5251282051282051" />
         <entry key="app/src/main/res/font/roboto.xml" value="0.475" />
         <entry key="app/src/main/res/layout/action_selection.xml" value="0.3555253623188406" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/fragment_conv_agent_chat.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/fragment_conv_agent_chat.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_transport.xml" value="0.30625" />
         <entry key="app/src/main/res/layout/message_bubble.xml" value="0.43523550724637683" />
       </map>

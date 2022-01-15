@@ -17,25 +17,21 @@ import kotlinx.coroutines.withContext
 private val ITEM_VIEW_TYPE_ACTION = 0
 private val ITEM_VIEW_TYPE_MSG = 1
 
-class ChatAdapter() :
-    ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallback()) {
+class ChatAdapter : ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     fun addMessageToChat(list: List<String>?) {
-        list?.let {
-            submitList(list.map { DataItem.MessageItem(it) })
-        }
-
-//        adapterScope.launch {
+        adapterScope.launch {
 //            val items = when (list) {
 //                null -> listOf(DataItem.ActionSelector)
 //                else -> listOf(DataItem.ActionSelector) + list.map { DataItem.MessageItem(it) }
 //            }
-//            withContext(Dispatchers.Main) {
-//                submitList(items)
-//            }
-//        }
+            val items = listOf(DataItem.MessageItem("Care e numarul de la interfon al Alinei?"), DataItem.MessageItem("Numarul este acesta:")) + listOf(DataItem.ActionSelector)
+            withContext(Dispatchers.Main) {
+                submitList(items)
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -94,7 +90,7 @@ class ChatAdapter() :
 
 class DiffCallback : DiffUtil.ItemCallback<DataItem>() {
     override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
-        return false
+        return oldItem.id == newItem.id
     }
 
     @SuppressLint("DiffUtilEquals")
@@ -106,9 +102,13 @@ class DiffCallback : DiffUtil.ItemCallback<DataItem>() {
 
 sealed class DataItem {
     data class MessageItem(val message: String) : DataItem() {
+        override val id = message
     }
 
     object ActionSelector : DataItem() {
+        override val id = "#ActionSelection"
     }
+
+    abstract val id: String
 }
 
