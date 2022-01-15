@@ -7,7 +7,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.POST
 
-private const val BASE_URL = ""
+private const val BASE_URL = "http://localhost:5000/"
 
 /**
  * Build the Moshi object that Retrofit will be using, making sure to add the Kotlin adapter for
@@ -28,11 +28,11 @@ private val retrofit = Retrofit.Builder()
 
 
 interface ConvAgentApiService {
-    @GET("")
-    suspend fun get(): Any
+    @POST("conversations/0/messages")
+    suspend fun nluProcess(): Any
 
-    @POST("")
-    suspend fun postMessage(): ConvAgentResponse
+    @POST("webhooks/rest/webhook")
+    suspend fun postMessageAndGetReply(): ConvAgentResponse
 }
 
 /**

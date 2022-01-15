@@ -8,7 +8,7 @@ import com.example.personalassistant.services.conv_agent.ConvAgentApi
 import kotlinx.coroutines.launch
 
 
-class ConvAgentChatViewModel() : ViewModel() {
+class ConvAgentChatViewModel : ViewModel() {
 
     // The internal MutableLiveData String that stores the most recent response
     private val _response = MutableLiveData<String>()
@@ -19,25 +19,23 @@ class ConvAgentChatViewModel() : ViewModel() {
 
     val chatMessages = MutableLiveData<MutableList<String>>(mutableListOf())
 
-    /**
-     * Call getMarsRealEstateProperties() on init so we can display status immediately.
-     */
-    init {
-//        postAgentMessage()
-        chatMessages.value?.add("Gabriel")
-    }
+    var agentResponseStatus = MutableLiveData<String?>()
 
     /**
      * Sets the value of the response LiveData to the Mars API status or the successful number of
      * Mars properties retrieved.
      */
-    private fun postAgentMessage() {
+    fun postAgentMessage(text: String) {
+        chatMessages.value?.add(text)
+
         viewModelScope.launch {
             try {
-                val result = ConvAgentApi.retrofitService.postMessage()
-                _response.value = "Agent response: ${result.message}"
+                val result = ConvAgentApi.retrofitService.postMessageAndGetReply()
+                chatMessages.value?.add(result.text)
+                agentResponseStatus.value = null
+                throw Exception("ceva fain")
             } catch (e: Exception) {
-                _response.value = "Conv agent API failure: ${e.message}"
+                agentResponseStatus.value = "Conv agent API failure: ${e.message}"
             }
         }
     }

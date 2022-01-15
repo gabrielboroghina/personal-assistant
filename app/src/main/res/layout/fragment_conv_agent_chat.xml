@@ -27,11 +27,11 @@
             android:autofillHints=""
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/left_guideline"
-            app:layout_constraintRight_toLeftOf="@id/send_message"
+            app:layout_constraintRight_toLeftOf="@id/send_message_btn"
             app:layout_constraintTop_toBottomOf="@id/chat" />
 
         <Button
-            android:id="@+id/send_message"
+            android:id="@+id/send_message_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=">"

@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.personalassistant.R
 import com.example.personalassistant.databinding.FragmentConvAgentChatBinding
 import com.example.personalassistant.services.conv_agent.ChatAdapter
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 
 
 class ConvAgentChatFragment : Fragment() {
@@ -41,6 +43,15 @@ class ConvAgentChatFragment : Fragment() {
             it?.let {
                 adapter.addMessageToChat(it)
             }
+        }
+
+        binding.sendMessageBtn.setOnClickListener {
+            val text: String = binding.newMessage.text.toString()
+            viewModel.postAgentMessage(text)
+        }
+
+        viewModel.agentResponseStatus.observe(viewLifecycleOwner) { status ->
+            status?.let { Snackbar.make(view!!, status, BaseTransientBottomBar.LENGTH_SHORT).show() }
         }
 
         return binding.root
