@@ -1,12 +1,14 @@
 package com.example.personalassistant.conv_agent_interaction
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.content.Context
+import android.net.Uri
+import android.os.Environment
+import androidx.core.content.FileProvider
+import androidx.lifecycle.*
+import com.example.personalassistant.BuildConfig
 import com.example.personalassistant.services.conv_agent.ConvAgentApi
 import kotlinx.coroutines.launch
-
+import java.io.File
 
 class ConvAgentChatViewModel : ViewModel() {
 
@@ -20,6 +22,8 @@ class ConvAgentChatViewModel : ViewModel() {
     val chatMessages = MutableLiveData<MutableList<String>>(mutableListOf())
 
     var agentResponseStatus = MutableLiveData<String?>()
+
+    var latestTmpUri: Uri? = null;
 
     /**
      * Sets the value of the response LiveData to the Mars API status or the successful number of
@@ -38,5 +42,16 @@ class ConvAgentChatViewModel : ViewModel() {
                 agentResponseStatus.value = "Conv agent API failure: ${e.message}"
             }
         }
+    }
+
+    fun getTmpFileUri(context: Context): Uri {
+        // Create an image file name
+        val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val tmpFile = File.createTempFile("tmp_image_file", ".png", storageDir).apply {
+            createNewFile()
+            deleteOnExit()
+        }
+
+        return FileProvider.getUriForFile(context, "${BuildConfig.APPLICATION_ID}.provider", tmpFile)
     }
 }

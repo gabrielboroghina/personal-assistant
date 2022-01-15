@@ -1,6 +1,7 @@
 package com.example.personalassistant.conv_agent_interaction
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,14 +15,26 @@ import com.example.personalassistant.services.conv_agent.ChatAdapter
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 
-class ConvAgentChatFragment : Fragment() {
+class ConvAgentChatFragment : Fragment(){
 
     /**
      * Lazily initialize our [ConvAgentChatViewModel].
      */
     private val viewModel: ConvAgentChatViewModel by lazy {
         ViewModelProvider(this).get(ConvAgentChatViewModel::class.java)
+    }
+
+    private val applicationContext by lazy { activity?.applicationContext }
+    private val takeImageResult = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+        if (isSuccess) {
+            viewModel.latestTmpUri?.let { uri ->
+                // TODO Do Something With The Uri ?
+                Log.d("TAG", uri.toString())
+            }
+        }
     }
 
     override fun onCreateView(
@@ -38,7 +51,7 @@ class ConvAgentChatFragment : Fragment() {
         binding.lifecycleOwner = this
 
         val linkPhotoListener: View.OnClickListener = View.OnClickListener {
-            Toast.makeText(view?.context, "clicked link photo", Toast.LENGTH_SHORT).show()
+            takeImage()
         }
 
         val adapter = ChatAdapter(linkPhotoListener)
@@ -60,5 +73,14 @@ class ConvAgentChatFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun takeImage() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.getTmpFileUri(applicationContext!!).let { uri ->
+                viewModel.latestTmpUri = uri
+                takeImageResult.launch(uri)
+            }
+        }
     }
 }
