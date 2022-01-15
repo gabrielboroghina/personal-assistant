@@ -6,17 +6,42 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.personalassistant.R
 import com.example.personalassistant.databinding.FragmentConvAgentChatBinding
+import com.example.personalassistant.services.conv_agent.ChatAdapter
 
 
 class ConvAgentChatFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    /**
+     * Lazily initialize our [ConvAgentChatViewModel].
+     */
+    private val viewModel: ConvAgentChatViewModel by lazy {
+        ViewModelProvider(this).get(ConvAgentChatViewModel::class.java)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
         // Get a reference to the binding object and inflate the fragment views
-        val binding: FragmentConvAgentChatBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_conv_agent_chat, container, false)
+        val binding: FragmentConvAgentChatBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_conv_agent_chat, container, false)
+
+        // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
+        binding.lifecycleOwner = this
+
+        val adapter = ChatAdapter()
+        binding.chat.adapter = adapter
+
+        viewModel.chatMessages.observe(viewLifecycleOwner) {
+            it?.let {
+                adapter.addMessageToChat(it)
+            }
+        }
 
         return binding.root
     }

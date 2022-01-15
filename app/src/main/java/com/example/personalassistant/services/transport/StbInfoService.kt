@@ -1,4 +1,4 @@
-package com.example.personalassistant.services
+package com.example.personalassistant.services.transport
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 
-private const val BASE_URL = ""
+private const val BASE_URL = "https://info.stbsa.ro/rp/api/"
 
 /**
  * Build the Moshi object that Retrofit will be using, making sure to add the Kotlin adapter for
@@ -26,14 +26,17 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 
-interface ConvAgentApiService {
-    @GET("")
-    suspend fun get(): Any
+interface StbInfoApiService {
+    @GET("lines")
+    suspend fun getLines(): LinesResponse
+
+    @GET("lines/68/vehicles/0")
+    suspend fun getLiveVehicles(): List<LiveVehicle>
 }
 
 /**
  * Public API object that exposes the lazy-initialized Retrofit service
  */
-object ConvAgentApi {
-    val retrofitService: ConvAgentApiService by lazy { retrofit.create(ConvAgentApiService::class.java) }
+object StbInfoApi {
+    val retrofitService: StbInfoApiService by lazy { retrofit.create(StbInfoApiService::class.java) }
 }

@@ -1,4 +1,4 @@
-package com.example.personalassistant.services
+package com.example.personalassistant.services.conv_agent
 
 import com.squareup.moshi.Json
 
