@@ -2,4 +2,6 @@
     <string name="app_name">Personal Assistant</string>
     <string name="btn_link_new_photo">Link photo</string>
     <string name="btn_enter_value">Enter value</string>
+    <string name="send_btn">Send</string>
+    <string name="new_message_placeholder">Type a message</string>
 </resources>

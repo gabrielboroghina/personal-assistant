@@ -7,6 +7,8 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.*
 import com.example.personalassistant.BuildConfig
 import com.example.personalassistant.services.conv_agent.ConvAgentApi
+import com.example.personalassistant.services.conv_agent.ConvAgentRequest
+import com.example.personalassistant.services.conv_agent.NluRequest
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -22,6 +24,7 @@ class ConvAgentChatViewModel : ViewModel() {
     val chatMessages = MutableLiveData<MutableList<String>>(mutableListOf())
 
     var agentResponseStatus = MutableLiveData<String?>()
+    val showActionSelector = MutableLiveData<Boolean>(false)
 
     var latestTmpUri: Uri? = null;
 
@@ -30,13 +33,21 @@ class ConvAgentChatViewModel : ViewModel() {
      * Mars properties retrieved.
      */
     fun postAgentMessage(text: String) {
+        showActionSelector.value = false
         chatMessages.value?.add(text)
+        chatMessages.value = chatMessages.value
 
         viewModelScope.launch {
             try {
-//                val nluRes = ConvAgentApi.retrofitService.nluProcess()
-//                val result = ConvAgentApi.retrofitService.postMessageAndGetReply()
-                chatMessages.value?.add("TODO result")
+                val nluRes = ConvAgentApi.retrofitService.nluProcess(NluRequest("user", text))
+                val result = ConvAgentApi.retrofitService.postMessageAndGetReply(ConvAgentRequest("user", text))
+
+                if (nluRes.message.intent.name == "mem_assistant.store_following_attr") {
+                    showActionSelector.value = true
+                } else {
+                    chatMessages.value?.add(result[0].text)
+                }
+                chatMessages.value = chatMessages.value
                 agentResponseStatus.value = null
             } catch (e: Exception) {
                 agentResponseStatus.value = "Conv agent API failure: ${e.message}"

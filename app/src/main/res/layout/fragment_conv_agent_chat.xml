@@ -25,16 +25,23 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:autofillHints=""
+            android:hint="@string/new_message_placeholder"
+            android:imeOptions="actionSend"
+            android:inputType="text"
+            android:maxLines="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/left_guideline"
             app:layout_constraintRight_toLeftOf="@id/send_message_btn"
             app:layout_constraintTop_toBottomOf="@id/chat" />
 
-        <Button
+        <ImageButton
             android:id="@+id/send_message_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=">"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/send_btn"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_send_arrow"
             app:layout_constraintBottom_toBottomOf="@id/new_message"
             app:layout_constraintLeft_toRightOf="@id/new_message"
             app:layout_constraintRight_toRightOf="@id/right_guideline"

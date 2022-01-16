@@ -4,10 +4,11 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 
-private const val BASE_URL = "http://localhost:5000/"
+private const val BASE_URL = "http://10.0.2.2:5000/"
 
 /**
  * Build the Moshi object that Retrofit will be using, making sure to add the Kotlin adapter for
@@ -29,10 +30,10 @@ private val retrofit = Retrofit.Builder()
 
 interface ConvAgentApiService {
     @POST("conversations/0/messages")
-    suspend fun nluProcess(): Any
+    suspend fun nluProcess(@Body data: NluRequest): NluResult
 
     @POST("webhooks/rest/webhook")
-    suspend fun postMessageAndGetReply(): ConvAgentResponse
+    suspend fun postMessageAndGetReply(@Body data: ConvAgentRequest): List<ConvAgentResponse>
 }
 
 /**

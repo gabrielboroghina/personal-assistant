@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalassistant.R
 import com.example.personalassistant.databinding.ActionSelectionBinding
 import com.example.personalassistant.databinding.MessageBubbleBinding
 import kotlinx.coroutines.CoroutineScope
@@ -22,13 +21,9 @@ class ChatAdapter(val linkPhotoListener: View.OnClickListener) : ListAdapter<Dat
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
-    fun addMessageToChat(list: List<String>?) {
+    fun addMessageToChat(list: List<String>, showActionSelector: Boolean) {
         adapterScope.launch {
-//            val items = when (list) {
-//                null -> listOf(DataItem.ActionSelector)
-//                else -> listOf(DataItem.ActionSelector) + list.map { DataItem.MessageItem(it) }
-//            }
-            val items = listOf(DataItem.MessageItem("Care e numarul de la interfon al Alinei?"), DataItem.MessageItem("Numarul este acesta:")) + listOf(DataItem.ActionSelector)
+            val items = list.map { DataItem.MessageItem(it) } + if (showActionSelector) listOf(DataItem.ActionSelector) else listOf()
             withContext(Dispatchers.Main) {
                 submitList(items)
             }
