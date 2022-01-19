@@ -4,7 +4,10 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Query
 
 private const val BASE_URL = "https://info.stbsa.ro/rp/api/"
 
@@ -32,6 +35,15 @@ interface StbInfoApiService {
 
     @GET("lines/68/vehicles/0")
     suspend fun getLiveVehicles(): List<LiveVehicle>
+
+    @POST("routes")
+    suspend fun getRoutes(@Body data: RouteRequest): RouteResponse
+
+    @GET("places")
+    suspend fun getPlacesForKeyword(
+        @Query("lang") lang: String,
+        @Query("query") keyword: String,
+    ): PlacesResponse
 }
 
 /**

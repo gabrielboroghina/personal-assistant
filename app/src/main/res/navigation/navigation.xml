@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation"
-    app:startDestination="@id/convAgentChatFragment">
+    app:startDestination="@id/transportFragment">
     <fragment
         android:id="@+id/convAgentChatFragment"
         android:name="com.example.personalassistant.conv_agent_interaction.ConvAgentChatFragment"
@@ -10,6 +10,9 @@
         <action
             android:id="@+id/action_convAgentChatFragment_to_assetsFragment"
             app:destination="@id/assetsFragment" />
+        <action
+            android:id="@+id/action_convAgentChatFragment_to_transportFragment"
+            app:destination="@id/transportFragment" />
     </fragment>
     <fragment
         android:id="@+id/assetsFragment"
@@ -19,4 +22,8 @@
             android:name="assets"
             app:argType="com.example.personalassistant.linked_assets.Asset[]" />
     </fragment>
+    <fragment
+        android:id="@+id/transportFragment"
+        android:name="com.example.personalassistant.transport_indications.TransportFragment"
+        android:label="TransportFragment" />
 </navigation>
