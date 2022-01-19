@@ -21,7 +21,7 @@ class ChatAdapter(val linkPhotoListener: View.OnClickListener) : ListAdapter<Dat
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
-    fun addMessageToChat(list: List<String>, showActionSelector: Boolean) {
+    fun updateMessages(list: List<String>, showActionSelector: Boolean) {
         adapterScope.launch {
             val items = list.map { DataItem.MessageItem(it) } + if (showActionSelector) listOf(DataItem.ActionSelector) else listOf()
             withContext(Dispatchers.Main) {

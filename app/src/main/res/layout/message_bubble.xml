@@ -20,10 +20,10 @@
             android:background="@drawable/msg_bubble_shape"
             android:elevation="5dp"
             android:gravity="start"
-            android:paddingLeft="15dp"
-            android:paddingTop="7dp"
-            android:paddingRight="15dp"
-            android:paddingBottom="7dp"
+            android:paddingLeft="12dp"
+            android:paddingTop="8dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="8dp"
             android:textColor="@color/white"
             tools:text="This is a test message" />
 

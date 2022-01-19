@@ -1,12 +1,14 @@
 package com.example.personalassistant.conv_agent_interaction
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -56,8 +59,12 @@ class ConvAgentChatFragment : Fragment() {
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
 
-        val linkPhotoListener: View.OnClickListener = View.OnClickListener {
-            takeImage()
+        val linkPhotoListener = View.OnClickListener {
+            lifecycleScope.launchWhenStarted {
+                viewModel.getTmpFileUri(applicationContext!!).let { uri ->
+                    takeImageResult.launch(uri)
+                }
+            }
         }
 
         val adapter = ChatAdapter(linkPhotoListener)
@@ -65,7 +72,8 @@ class ConvAgentChatFragment : Fragment() {
 
         viewModel.chatMessages.observe(viewLifecycleOwner) {
             it?.let {
-                adapter.addMessageToChat(it, viewModel.showActionSelector.value ?: false)
+                adapter.updateMessages(it, viewModel.showActionSelector.value ?: false)
+                binding.chat.smoothScrollToPosition(adapter.itemCount)
             }
         }
 
@@ -109,6 +117,11 @@ class ConvAgentChatFragment : Fragment() {
                     }
                 }
 
+                // Hide keyboard
+                val imm = context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view!!.windowToken, 0)
+
+                // Navigate to the assets view
                 this.findNavController()
                     .navigate(ConvAgentChatFragmentDirections.actionConvAgentChatFragmentToAssetsFragment(assets.toTypedArray()))
                 viewModel.showAssetsPageDone()
@@ -116,14 +129,5 @@ class ConvAgentChatFragment : Fragment() {
         }
 
         return binding.root
-    }
-
-    private fun takeImage() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.getTmpFileUri(applicationContext!!).let { uri ->
-                viewModel.latestAssetUri = uri
-                takeImageResult.launch(uri)
-            }
-        }
     }
 }

@@ -14,7 +14,7 @@ import com.example.personalassistant.BuildConfig
 
 
 /**
- * This fragment shows the the status of the Mars real-estate web services transaction.
+ * Display the list of image assets linked to a specific description.
  */
 class AssetsFragment : Fragment() {
 
@@ -60,28 +60,5 @@ class AssetsFragment : Fragment() {
 
         setHasOptionsMenu(true)
         return binding.root
-    }
-
-    /**
-     * Inflates the overflow menu that contains filtering options.
-     */
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        inflater.inflate(R.menu.overflow_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    /**
-     * Updates the filter in the [AssetsViewModel] when the menu items are selected from the
-     * overflow menu.
-     */
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        viewModel.updateFilter(
-//            when (item.itemId) {
-//                R.id.show_rent_menu -> MarsApiFilter.SHOW_RENT
-//                R.id.show_buy_menu -> MarsApiFilter.SHOW_BUY
-//                else -> MarsApiFilter.SHOW_ALL
-//            }
-//        )
-        return false
     }
 }

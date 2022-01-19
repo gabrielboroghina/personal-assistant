@@ -24,10 +24,6 @@ class TransportViewModel : ViewModel() {
         fetchLines()
     }
 
-    /**
-     * Sets the value of the response LiveData to the Mars API status or the successful number of
-     * Mars properties retrieved.
-     */
     private fun fetchLines() {
         viewModelScope.launch {
             try {

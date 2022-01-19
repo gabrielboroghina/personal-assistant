@@ -23,12 +23,10 @@ class ConvAgentChatViewModel : ViewModel() {
 
     val showAssets = MutableLiveData<List<String>?>(null)
 
-    var latestAssetUri: Uri? = null
     var latestAssetId: String? = null
 
     /**
-     * Sets the value of the response LiveData to the Mars API status or the successful number of
-     * Mars properties retrieved.
+     * Send a new message to the conversational agent and wait for its reply.
      */
     fun postAgentMessage(text: String) {
         showActionSelector.value = false
@@ -64,6 +62,9 @@ class ConvAgentChatViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Send the UUID of the new linked asset to be stored by the agent for the previously mentioned description.
+     */
     fun postAssetId(id: String) {
         viewModelScope.launch {
             try {

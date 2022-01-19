@@ -15,8 +15,8 @@ class PhotoGridAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<Asset, PhotoGridAdapter.AssetViewHolder>(DiffCallback) {
 
     /**
-     * The MarsPropertyViewHolder constructor takes the binding variable from the associated
-     * GridViewItem, which nicely gives it access to the full [Asset] information.
+     * The AssetViewHolder constructor takes the binding variable from the associated
+     * GridViewItem, which gives it access to the full [Asset] information.
      */
     class AssetViewHolder(private var binding: GridViewAssetBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(asset: Asset) {
