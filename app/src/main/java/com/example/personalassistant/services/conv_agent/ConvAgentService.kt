@@ -8,7 +8,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 
-private const val BASE_URL = "http://10.0.2.2:5000/"
+private const val BASE_URL = "http://192.168.100.62:5000/"
 
 /**
  * Build the Moshi object that Retrofit will be using, making sure to add the Kotlin adapter for

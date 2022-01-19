@@ -1,12 +1,11 @@
 package com.example.personalassistant.conv_agent_interaction
 
 import android.os.Bundle
-import android.util.Log
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -17,7 +16,13 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.personalassistant.BuildConfig
+import com.example.personalassistant.linked_assets.Asset
+import java.io.File
+import java.util.*
 
 class ConvAgentChatFragment : Fragment() {
 
@@ -29,15 +34,11 @@ class ConvAgentChatFragment : Fragment() {
     }
 
     private val applicationContext by lazy { activity?.applicationContext }
-    private val takeImageResult =
-        registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
-            if (isSuccess) {
-                viewModel.latestTmpUri?.let { uri ->
-                    // TODO Do Something With The Uri ?
-                    Log.d("TAG", uri.toString())
-                }
-            }
+    private val takeImageResult = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+        if (isSuccess) {
+            viewModel.postAssetId(viewModel.latestAssetId ?: "unknown")
         }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,12 +69,14 @@ class ConvAgentChatFragment : Fragment() {
         binding.sendMessageBtn.setOnClickListener {
             val text: String = binding.newMessage.text.toString()
             viewModel.postAgentMessage(text)
+            binding.newMessage.text.clear()
         }
 
         binding.newMessage.setOnEditorActionListener { v, actionId, event ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_SEND -> {
                     viewModel.postAgentMessage(v.text.toString())
+                    binding.newMessage.text.clear()
                     true
                 }
                 else -> false
@@ -86,13 +89,35 @@ class ConvAgentChatFragment : Fragment() {
             }
         }
 
+        viewModel.showAssets.observe(viewLifecycleOwner) { assetIds ->
+            if (assetIds != null) {
+                val storageDir: File? = applicationContext?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+
+                val assets: MutableList<Asset> = mutableListOf()
+                for (assetId in assetIds) {
+                    val file = File(storageDir, "$assetId.jpg")
+                    if (file.exists()) {
+                        val uri = FileProvider.getUriForFile(
+                            applicationContext!!,
+                            "${BuildConfig.APPLICATION_ID}.provider",
+                            file
+                        )
+                        assets.add(Asset(assetId, uri))
+                    }
+                }
+
+                this.findNavController()
+                    .navigate(ConvAgentChatFragmentDirections.actionConvAgentChatFragmentToAssetsFragment(assets.toTypedArray()))
+            }
+        }
+
         return binding.root
     }
 
     private fun takeImage() {
         lifecycleScope.launchWhenStarted {
             viewModel.getTmpFileUri(applicationContext!!).let { uri ->
-                viewModel.latestTmpUri = uri
+                viewModel.latestAssetUri = uri
                 takeImageResult.launch(uri)
             }
         }
