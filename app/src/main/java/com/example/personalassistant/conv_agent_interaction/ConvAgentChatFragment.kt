@@ -2,6 +2,7 @@ package com.example.personalassistant.conv_agent_interaction
 
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -45,6 +47,7 @@ class ConvAgentChatFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        (activity as AppCompatActivity).supportActionBar?.title = "Personal Assistant"
 
         // Get a reference to the binding object and inflate the fragment views
         val binding: FragmentConvAgentChatBinding =
@@ -108,6 +111,7 @@ class ConvAgentChatFragment : Fragment() {
 
                 this.findNavController()
                     .navigate(ConvAgentChatFragmentDirections.actionConvAgentChatFragmentToAssetsFragment(assets.toTypedArray()))
+                viewModel.showAssetsPageDone()
             }
         }
 

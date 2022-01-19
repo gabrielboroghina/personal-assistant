@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.personalassistant.databinding.FragmentAssetsBinding
 import java.io.File
 import android.os.Environment
+import androidx.appcompat.app.AppCompatActivity
 import com.example.personalassistant.BuildConfig
 
 
@@ -27,6 +28,8 @@ class AssetsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        (activity as AppCompatActivity).supportActionBar?.title = "Assets"
+
         val binding = FragmentAssetsBinding.inflate(inflater)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
@@ -79,6 +82,6 @@ class AssetsFragment : Fragment() {
 //                else -> MarsApiFilter.SHOW_ALL
 //            }
 //        )
-        return true
+        return false
     }
 }

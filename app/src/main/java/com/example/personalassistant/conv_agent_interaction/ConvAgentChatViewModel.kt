@@ -88,4 +88,11 @@ class ConvAgentChatViewModel : ViewModel() {
 
         return FileProvider.getUriForFile(context, "${BuildConfig.APPLICATION_ID}.provider", file)
     }
+
+    /**
+     * After the navigation has taken place, make sure navigateToSelectedProperty is set to null
+     */
+    fun showAssetsPageDone() {
+        showAssets.value = null
+    }
 }
