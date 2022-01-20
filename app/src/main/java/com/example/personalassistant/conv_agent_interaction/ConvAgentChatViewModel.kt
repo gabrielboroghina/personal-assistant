@@ -22,7 +22,7 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
 
     val chatMessages = MutableLiveData<MutableList<String>>(mutableListOf())
 
-    var agentResponseStatus = MutableLiveData<String?>()
+    var statusMessage = MutableLiveData<String?>()
     val showActionSelector = MutableLiveData<Boolean>(false)
 
     val showAssets = MutableLiveData<Pair<String, List<String>>?>(null)
@@ -66,6 +66,7 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
 
                 showAssets.value = null
                 transportationLoc.value = null
+                statusMessage.value = null
 
                 if (nluRes.message.intent.name == "mem_assistant.store_following_attr") {
                     // Link an asset to the mentioned description
@@ -98,18 +99,23 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
 
                             if (placesRes.places.isNotEmpty() && homeLoc != null) {
                                 val dest = placesRes.places[0]
-                                transportationLoc.value = Journey(homeLoc.lat, homeLoc.lng, dest.lat, dest.lng, "home", dest.name)
+                                transportationLoc.value =
+                                    Journey(homeLoc.lat, homeLoc.lng, dest.lat, dest.lng, "home", dest.name)
+                            } else {
+                                statusMessage.value = "No place with this name was found"
                             }
                         }
+                    } else {
+                        statusMessage.value = "Could not extract the location from your utterance"
                     }
                 } else {
                     // Add the agent's reply to the chat list
                     chatMessages.value?.add(reply)
                 }
                 chatMessages.value = chatMessages.value
-                agentResponseStatus.value = null
+                statusMessage.value = null
             } catch (e: Exception) {
-                agentResponseStatus.value = "Conv agent API failure: ${e.message}"
+                statusMessage.value = "Conv agent API failure: ${e.message}"
             }
         }
     }
@@ -125,7 +131,7 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
                 showActionSelector.value = false
                 chatMessages.value = chatMessages.value
             } catch (e: Exception) {
-                agentResponseStatus.value = "Conv agent API failure: ${e.message}"
+                statusMessage.value = "Conv agent API failure: ${e.message}"
             }
         }
     }

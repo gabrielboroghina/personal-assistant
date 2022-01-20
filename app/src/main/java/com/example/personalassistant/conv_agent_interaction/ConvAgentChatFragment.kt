@@ -73,6 +73,10 @@ class ConvAgentChatFragment : Fragment() {
 
         viewModel.chatMessages.observe(viewLifecycleOwner) {
             it?.let {
+                if (it.isNotEmpty()) {
+                    binding.chatEmptyState.visibility = View.INVISIBLE
+                    binding.chatEmptyStateMsg.visibility = View.INVISIBLE
+                }
                 adapter.updateMessages(it, viewModel.showActionSelector.value ?: false)
                 binding.chat.smoothScrollToPosition(adapter.itemCount)
             }
@@ -95,7 +99,7 @@ class ConvAgentChatFragment : Fragment() {
             }
         }
 
-        viewModel.agentResponseStatus.observe(viewLifecycleOwner) { status ->
+        viewModel.statusMessage.observe(viewLifecycleOwner) { status ->
             status?.let {
                 Snackbar.make(view!!, status, BaseTransientBottomBar.LENGTH_SHORT).show()
             }
