@@ -48,6 +48,10 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
      * Send a new message to the conversational agent and wait for its reply.
      */
     fun postAgentMessage(text: String) {
+        if (text.trim().isEmpty()) {
+            return
+        }
+
         showActionSelector.value = false
         chatMessages.value?.add(text)
         chatMessages.value = chatMessages.value
@@ -70,7 +74,8 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
                     // Show the user the list of assets linked to the mentioned description
 
                     val who = nluRes.message.semanticRoles.filter { it.question == "cine" }
-                    val description = if (who.isNotEmpty()) who[0].extendedValue.replaceFirstChar { it.uppercase() } else "Linked assets"
+                    val description =
+                        if (who.isNotEmpty()) who[0].extendedValue.replaceFirstChar { it.uppercase() } else "Linked assets"
 
                     if (reply.contains("\n")) {
                         val assets = reply.split("\n").map { it.split("➜")[1].trim() }
@@ -93,7 +98,7 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
 
                             if (placesRes.places.isNotEmpty() && homeLoc != null) {
                                 val dest = placesRes.places[0]
-                                transportationLoc.value = Journey(homeLoc.lat, homeLoc.lng, dest.lat, dest.lng)
+                                transportationLoc.value = Journey(homeLoc.lat, homeLoc.lng, dest.lat, dest.lng, "home", dest.name)
                             }
                         }
                     }

@@ -24,7 +24,7 @@ class TransportFragment : Fragment() {
 
         // Get a reference to the binding object and inflate the fragment views
         val binding: FragmentTransportBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_transport, container, false)
+                DataBindingUtil.inflate(inflater, R.layout.fragment_transport, container, false)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
@@ -33,6 +33,8 @@ class TransportFragment : Fragment() {
         val journey = TransportFragmentArgs.fromBundle(arguments!!).journey
         val viewModelFactory = TransportViewModelFactory(journey)
         val viewModel = ViewModelProvider(this, viewModelFactory).get(TransportViewModel::class.java)
+
+        binding.routesTitle.text = "Routes from ${journey.src} to ${journey.dest}"
 
         val adapter = RoutesAdapter(applicationContext!!)
         binding.routesRecyclerview.adapter = adapter
