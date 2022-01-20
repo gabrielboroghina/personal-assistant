@@ -1,4 +1,4 @@
-package com.example.personalassistant.services.conv_agent
+package com.example.personalassistant.conv_agent_interaction
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -17,13 +17,15 @@ import kotlinx.coroutines.withContext
 private val ITEM_VIEW_TYPE_ACTION = 0
 private val ITEM_VIEW_TYPE_MSG = 1
 
-class ChatAdapter(val linkPhotoListener: View.OnClickListener) : ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallback()) {
+class ChatAdapter(val linkPhotoListener: View.OnClickListener) :
+    ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     fun updateMessages(list: List<String>, showActionSelector: Boolean) {
         adapterScope.launch {
-            val items = list.map { DataItem.MessageItem(it) } + if (showActionSelector) listOf(DataItem.ActionSelector) else listOf()
+            val items =
+                list.map { DataItem.MessageItem(it) } + if (showActionSelector) listOf(DataItem.ActionSelector) else listOf()
             withContext(Dispatchers.Main) {
                 submitList(items)
             }
@@ -57,7 +59,8 @@ class ChatAdapter(val linkPhotoListener: View.OnClickListener) : ListAdapter<Dat
         }
     }
 
-    class ActionsViewHolder private constructor(val binding: ActionSelectionBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ActionsViewHolder private constructor(val binding: ActionSelectionBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(linkPhotoListener: View.OnClickListener) {
             binding.actionTakePhoto.setOnClickListener(linkPhotoListener)
@@ -74,7 +77,8 @@ class ChatAdapter(val linkPhotoListener: View.OnClickListener) : ListAdapter<Dat
     }
 
 
-    class MessageViewHolder private constructor(val binding: MessageBubbleBinding) : RecyclerView.ViewHolder(binding.root) {
+    class MessageViewHolder private constructor(val binding: MessageBubbleBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(message: String) {
             binding.message.text = message

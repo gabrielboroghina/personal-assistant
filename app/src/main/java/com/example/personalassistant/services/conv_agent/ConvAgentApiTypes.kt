@@ -1,6 +1,8 @@
 package com.example.personalassistant.services.conv_agent
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
+import kotlinx.android.parcel.Parcelize
 
 data class ConvAgentRequest(
     val sender: String,
@@ -17,10 +19,21 @@ data class NluIntent(
     val confidence: Double
 )
 
+data class SemanticRole(
+    val question: String, // "unde"
+    val determiner: String, // "ajung"
+    val pre: String?,
+    val value: String,
+    val lemma: String?,
+    @Json(name = "ext_value") val extendedValue: String,
+//    val specifiers: []
+)
+
 data class NluProcessedMessage(
     val intent: NluIntent,
     val entities: List<Any>,
     val text: String,
+    @Json(name = "semantic_roles") val semanticRoles: List<SemanticRole>,
     @Json(name = "intent_ranking") val intentRanking: List<NluIntent>
 )
 
@@ -32,3 +45,11 @@ data class ConvAgentResponse(
     @Json(name = "recipient_id") val recipientId: String,
     val text: String,
 )
+
+@Parcelize
+data class Journey(
+    val srcLat: Double,
+    val srcLng: Double,
+    val dstLat: Double,
+    val dstLng: Double,
+) : Parcelable

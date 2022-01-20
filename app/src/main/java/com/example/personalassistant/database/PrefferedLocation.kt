@@ -10,6 +10,12 @@ data class PrefferedLocation(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0L,
 
-    @ColumnInfo(name = "")
+    @ColumnInfo(name = "name")
     val name: String,
+
+    @ColumnInfo(name = "lat")
+    val lat: Double,
+
+    @ColumnInfo(name = "lng")
+    val lng: Double,
 )
