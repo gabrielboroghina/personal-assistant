@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation"
-    app:startDestination="@id/transportFragment">
+    app:startDestination="@id/convAgentChatFragment">
     <fragment
         android:id="@+id/convAgentChatFragment"
         android:name="com.example.personalassistant.conv_agent_interaction.ConvAgentChatFragment"
@@ -25,5 +25,9 @@
     <fragment
         android:id="@+id/transportFragment"
         android:name="com.example.personalassistant.transport_indications.TransportFragment"
-        android:label="TransportFragment" />
+        android:label="TransportFragment" >
+        <argument
+            android:name="journey"
+            app:argType="com.example.personalassistant.services.conv_agent.Journey" />
+    </fragment>
 </navigation>

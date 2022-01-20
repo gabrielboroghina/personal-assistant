@@ -5,18 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.personalassistant.services.conv_agent.Journey
 import com.example.personalassistant.services.transport.Route
 import com.example.personalassistant.services.transport.RouteRequest
 import com.example.personalassistant.services.transport.StbInfoApi
 import kotlinx.coroutines.launch
 
 
-class TransportViewModel : ViewModel() {
+class TransportViewModel(val journey: Journey) : ViewModel() {
 
-    // The internal MutableLiveData String that stores the most recent response
     private val _response = MutableLiveData<String>()
-
-    // The external immutable LiveData for the response String
     val response: LiveData<String>
         get() = _response
 
@@ -28,7 +26,7 @@ class TransportViewModel : ViewModel() {
 
     init {
         // Get the list of lines to extract the mapping between the line name and its ID
-        fetchLines()
+        getRoutesForJourney()
     }
 
     private fun fetchLines() {
@@ -40,25 +38,26 @@ class TransportViewModel : ViewModel() {
                 for (line in result.lines) {
                     lineIdForLineName[line.name] = line.id
                 }
+            } catch (e: Exception) {
+                _response.value = "STB API failure: ${e.message}"
+            }
+        }
+    }
 
-
-                // TODO use these APIs where needed
+    private fun getRoutesForJourney() {
+        viewModelScope.launch {
+            try {
                 val routeRequest = RouteRequest(
-                    start_lat = 44.427513,
-                    start_lng = 26.101826,
-                    stop_lat = 44.418478,
-                    stop_lng = 26.007745,
+                    start_lat = journey.srcLat,
+                    start_lng = journey.srcLng,
+                    stop_lat = journey.dstLat,
+                    stop_lng = journey.dstLng
                 )
 
                 val routesRes = StbInfoApi.retrofitService.getRoutes(routeRequest)
                 _routes.value = routesRes.routes
                 if (routesRes.routes.isNotEmpty()) // empty means no route exists at this time
-                    Log.d("===========", routesRes.routes[0].segments[0].transportName)
-
-                val placesRes = StbInfoApi.retrofitService.getPlacesForKeyword("ro", "gara de")
-                if (placesRes.places.isNotEmpty())
-                    Log.d("===========", placesRes.places[0].name)
-
+                    Log.d("=========== ROUTES", routesRes.routes[0].segments[0].transportName)
             } catch (e: Exception) {
                 _response.value = "STB API failure: ${e.message}"
             }

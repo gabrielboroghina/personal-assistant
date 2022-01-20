@@ -1,7 +1,6 @@
 package com.example.personalassistant.conv_agent_interaction
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
@@ -20,11 +19,11 @@ import com.google.android.material.snackbar.Snackbar
 
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.personalassistant.BuildConfig
+import com.example.personalassistant.database.PADatabase
 import com.example.personalassistant.linked_assets.Asset
 import java.io.File
 import java.util.*
@@ -34,9 +33,7 @@ class ConvAgentChatFragment : Fragment() {
     /**
      * Lazily initialize our [ConvAgentChatViewModel].
      */
-    private val viewModel: ConvAgentChatViewModel by lazy {
-        ViewModelProvider(this).get(ConvAgentChatViewModel::class.java)
-    }
+    private lateinit var viewModel: ConvAgentChatViewModel
 
     private val applicationContext by lazy { activity?.applicationContext }
     private val takeImageResult = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
@@ -58,6 +55,13 @@ class ConvAgentChatFragment : Fragment() {
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
+
+        val application = requireNotNull(this.activity).application
+
+        // Create an instance of the ViewModel Factory.
+        val dataSource = PADatabase.getInstance(application).databaseDao
+        val viewModelFactory = ConvAgentViewModelFactory(dataSource)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ConvAgentChatViewModel::class.java)
 
         val linkPhotoListener = View.OnClickListener {
             lifecycleScope.launchWhenStarted {
@@ -125,6 +129,15 @@ class ConvAgentChatFragment : Fragment() {
                 this.findNavController()
                     .navigate(ConvAgentChatFragmentDirections.actionConvAgentChatFragmentToAssetsFragment(assets.toTypedArray()))
                 viewModel.showAssetsPageDone()
+            }
+        }
+
+        viewModel.transportationLoc.observe(viewLifecycleOwner) { srcDst ->
+            if (srcDst !== null) {
+                // Navigate to the transportation indications page
+                this.findNavController()
+                    .navigate(ConvAgentChatFragmentDirections.actionConvAgentChatFragmentToTransportFragment(srcDst))
+                viewModel.showTransportationPageDone()
             }
         }
 

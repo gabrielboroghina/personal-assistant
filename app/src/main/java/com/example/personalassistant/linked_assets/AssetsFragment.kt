@@ -35,6 +35,7 @@ class AssetsFragment : Fragment() {
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
 
+        // Initialize ViewModel
         val assets = AssetsFragmentArgs.fromBundle(arguments!!).assets
         val viewModelFactory = AssetsViewModelFactory(assets)
         val viewModel = ViewModelProvider(this, viewModelFactory).get(AssetsViewModel::class.java)

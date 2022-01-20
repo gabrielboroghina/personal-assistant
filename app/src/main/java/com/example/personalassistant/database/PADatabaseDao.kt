@@ -1,6 +1,5 @@
 package com.example.personalassistant.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -27,8 +26,8 @@ interface PADatabaseDao {
      *
      * @param key
      */
-    @Query("SELECT * from preffered_locations WHERE id = :key")
-    suspend fun get(key: Long): PrefferedLocation?
+    @Query("SELECT * from preffered_locations WHERE name = :name")
+    suspend fun getByName(name: String): PrefferedLocation?
 
     /**
      * Deletes all values from the table.
@@ -44,5 +43,5 @@ interface PADatabaseDao {
      * sorted by start time in descending order.
      */
     @Query("SELECT * FROM preffered_locations ORDER BY id DESC")
-    fun getAll(): LiveData<List<PrefferedLocation>>
+    suspend fun getAll(): List<PrefferedLocation>
 }
