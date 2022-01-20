@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.personalassistant.R
 import com.example.personalassistant.databinding.FragmentTransportBinding
-
+import com.example.personalassistant.services.transport.RouteAdapter
 
 class TransportFragment : Fragment() {
 
@@ -20,6 +20,8 @@ class TransportFragment : Fragment() {
         ViewModelProvider(this).get(TransportViewModel::class.java)
     }
 
+    private val applicationContext by lazy { activity?.applicationContext }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
@@ -29,8 +31,16 @@ class TransportFragment : Fragment() {
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
 
-        viewModel.response.observe(viewLifecycleOwner) { text ->
-            binding.dummyText.text = text
+        val adapter = RouteAdapter(applicationContext!!)
+        binding.routeRecyclerview.adapter = adapter
+
+        viewModel.routes.observe(viewLifecycleOwner) {
+            it?.let {
+                if (it.isNotEmpty()) {
+                    adapter.updateRoute(it[0].segments)
+                }
+                //binding.chat.smoothScrollToPosition(adapter.itemCount)
+            }
         }
 
         return binding.root

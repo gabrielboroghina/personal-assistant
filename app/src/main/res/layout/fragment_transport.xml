@@ -5,19 +5,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/dummy_text"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Agent Response" />
+            android:layout_margin="12dp"
+            android:orientation="vertical">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--Child RecyclerView-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/route_recyclerview"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/transportation_option_duration"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:textStyle="bold" />
+        </LinearLayout>
 </layout>
