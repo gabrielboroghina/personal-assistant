@@ -25,7 +25,7 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
     var agentResponseStatus = MutableLiveData<String?>()
     val showActionSelector = MutableLiveData<Boolean>(false)
 
-    val showAssets = MutableLiveData<List<String>?>(null)
+    val showAssets = MutableLiveData<Pair<String, List<String>>?>(null)
     var latestAssetId: String? = null
 
     val transportationLoc: MutableLiveData<Journey?> = MutableLiveData(null)
@@ -68,17 +68,22 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
                     showActionSelector.value = true
                 } else if (nluRes.message.intent.name == "mem_assistant.get_attr") {
                     // Show the user the list of assets linked to the mentioned description
+
+                    val who = nluRes.message.semanticRoles.filter { it.question == "cine" }
+                    val description = if (who.isNotEmpty()) who[0].extendedValue.replaceFirstChar { it.uppercase() } else "Linked assets"
+
                     if (reply.contains("\n")) {
-                        showAssets.value = reply.split("\n").map { it.split("➜")[1].trim() }
+                        val assets = reply.split("\n").map { it.split("➜")[1].trim() }
+                        showAssets.value = Pair(description, assets)
                     } else {
-                        showAssets.value = listOf(reply)
+                        showAssets.value = Pair(description, listOf(reply))
                     }
                 } else if (nluRes.message.intent.name == "mem_assistant.get_transport") {
                     // Find transportation routes for the mentioned destination
                     val locations = nluRes.message.semanticRoles.filter { it.question == "unde" }
                     if (locations.isNotEmpty()) {
                         val destination = locations[locations.size - 1].extendedValue
-                        Log.d("************** ROUTES to", destination)
+                        Log.d(">>>>>>>> ROUTES to", destination)
 
                         // Find exact destination for the mentioned one
                         val placesRes = StbInfoApi.retrofitService.getPlacesForKeyword("ro", destination)
@@ -88,8 +93,6 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
 
                             if (placesRes.places.isNotEmpty() && homeLoc != null) {
                                 val dest = placesRes.places[0]
-                                Log.d("===========", placesRes.places[0].name + homeLoc)
-
                                 transportationLoc.value = Journey(homeLoc.lat, homeLoc.lng, dest.lat, dest.lng)
                             }
                         }

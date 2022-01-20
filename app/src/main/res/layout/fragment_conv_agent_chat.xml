@@ -27,6 +27,7 @@
             android:background="@drawable/edittext_shape"
             android:hint="@string/new_message_placeholder"
             android:imeOptions="actionSend"
+            android:textCursorDrawable="@drawable/edittext_cursor"
             android:inputType="text"
             android:maxLines="1"
             android:paddingLeft="10dp"
@@ -37,8 +38,8 @@
 
         <ImageButton
             android:id="@+id/send_message_btn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
             android:layout_marginBottom="10dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/send_btn"

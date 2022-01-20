@@ -21,6 +21,9 @@
         <argument
             android:name="assets"
             app:argType="com.example.personalassistant.linked_assets.Asset[]" />
+        <argument
+            android:name="description"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/transportFragment"

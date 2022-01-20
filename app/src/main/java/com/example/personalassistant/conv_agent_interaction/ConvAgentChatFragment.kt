@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.personalassistant.R
 import com.example.personalassistant.databinding.FragmentConvAgentChatBinding
-import com.example.personalassistant.services.conv_agent.ChatAdapter
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 
@@ -104,8 +103,10 @@ class ConvAgentChatFragment : Fragment() {
             }
         }
 
-        viewModel.showAssets.observe(viewLifecycleOwner) { assetIds ->
-            if (assetIds != null) {
+        viewModel.showAssets.observe(viewLifecycleOwner) { content ->
+            if (content != null) {
+                val description = content.first
+                val assetIds = content.second
                 val storageDir: File? = applicationContext?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
                 val assets: MutableList<Asset> = mutableListOf()
@@ -127,7 +128,12 @@ class ConvAgentChatFragment : Fragment() {
 
                 // Navigate to the assets view
                 this.findNavController()
-                    .navigate(ConvAgentChatFragmentDirections.actionConvAgentChatFragmentToAssetsFragment(assets.toTypedArray()))
+                    .navigate(
+                        ConvAgentChatFragmentDirections.actionConvAgentChatFragmentToAssetsFragment(
+                            assets.toTypedArray(),
+                            description
+                        )
+                    )
                 viewModel.showAssetsPageDone()
             }
         }
