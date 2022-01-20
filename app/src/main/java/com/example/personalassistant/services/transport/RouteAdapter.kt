@@ -13,10 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.example.personalassistant.R
-import android.net.Uri
 import android.content.Context
-
-import androidx.appcompat.content.res.AppCompatResources
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 
 
@@ -43,7 +41,7 @@ class RouteAdapter(private val context: Context) : ListAdapter<RouteSegment, Rou
     class RouteSegmentViewHolder private constructor(val binding: RouteSegmentBinding, val context: Context) : RecyclerView.ViewHolder(binding.root) {
         fun bind(model: RouteSegment) {
             binding.transportName.text = model.transportName
-            binding.duration.text = model.duration.div(60000).minutes.toString()
+            binding.duration.text = model.duration.milliseconds.toString()
             if (model.transportType == "TRAM") {
                 binding.icon.setImageResource(R.drawable.ic_baseline_tram_24)
             }
