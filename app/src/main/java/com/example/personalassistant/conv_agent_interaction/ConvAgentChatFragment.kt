@@ -46,8 +46,6 @@ class ConvAgentChatFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        (activity as AppCompatActivity).supportActionBar?.title = "Personal Assistant"
-
         // Get a reference to the binding object and inflate the fragment views
         val binding: FragmentConvAgentChatBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_conv_agent_chat, container, false)
@@ -148,5 +146,10 @@ class ConvAgentChatFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        (activity as AppCompatActivity).supportActionBar?.title = "Personal Assistant"
     }
 }

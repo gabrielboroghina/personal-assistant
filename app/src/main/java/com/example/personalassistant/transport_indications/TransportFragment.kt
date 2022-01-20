@@ -32,9 +32,7 @@ class TransportFragment : Fragment() {
         val viewModelFactory = TransportViewModelFactory(journey)
         val viewModel = ViewModelProvider(this, viewModelFactory).get(TransportViewModel::class.java)
 
-        viewModel.response.observe(viewLifecycleOwner) { text ->
-            binding.dummyText.text = text
-        }
+        binding.routesTitle.text = "Routes from ${journey.src} to ${journey.dest}"
 
         return binding.root
     }

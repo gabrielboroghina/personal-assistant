@@ -52,4 +52,6 @@ data class Journey(
     val srcLng: Double,
     val dstLat: Double,
     val dstLng: Double,
+    val src: String,
+    val dest: String,
 ) : Parcelable
