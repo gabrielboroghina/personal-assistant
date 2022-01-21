@@ -56,6 +56,10 @@ class RouteAdapter(private val context: Context) :
                 binding.icon.setImageResource(R.drawable.ic_baseline_directions_bus_24)
             }
 
+            if (model.transportType == "CABLE_CAR") {
+                binding.icon.setImageResource(R.drawable.ic_baseline_directions_trolley_24)
+            }
+
             if (model.transportType == "WALK") {
                 binding.icon.setImageResource(R.drawable.ic_baseline_directions_walk_24)
             }

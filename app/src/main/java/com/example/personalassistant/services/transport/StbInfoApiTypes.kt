@@ -2,6 +2,7 @@ package com.example.personalassistant.services.transport
 
 import com.squareup.moshi.Json
 
+// GPS-positioned vehicle
 data class LiveVehicle(
     val code: String,
     val id: Int,
@@ -13,15 +14,8 @@ data class LiveVehicle(
 data class LineData(
     val id: Int,
     val name: String,
-    val type: String, // BUS/TRAM/
+    val type: String,
     val color: String,
-//    val has_notifications: Boolean,
-//    val price_ticket_sms: null,
-//    ticket_sms": "U",
-//    organization: {
-//        "id": 1,
-//        "logo": "https://info.stbsa.ro/src/img/avl/stbsa/logos/logo.png"
-//    }
 )
 
 data class LinesResponse(

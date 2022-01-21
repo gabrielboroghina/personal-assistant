@@ -8,7 +8,7 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.*
 import com.example.personalassistant.BuildConfig
 import com.example.personalassistant.database.PADatabaseDao
-import com.example.personalassistant.database.PrefferedLocation
+import com.example.personalassistant.database.PreferredLocation
 import com.example.personalassistant.services.conv_agent.ConvAgentApi
 import com.example.personalassistant.services.conv_agent.ConvAgentRequest
 import com.example.personalassistant.services.conv_agent.Journey
@@ -18,28 +18,42 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
 
-class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
+class ConvAgentChatViewModel(private val dataSource: PADatabaseDao) : ViewModel() {
 
-    val chatMessages = MutableLiveData<MutableList<String>>(mutableListOf())
+    private val _chatMessages = MutableLiveData<MutableList<String>>(mutableListOf())
+    val chatMessages: LiveData<MutableList<String>>
+        get() = _chatMessages
 
-    var statusMessage = MutableLiveData<String?>()
-    val showActionSelector = MutableLiveData<Boolean>(false)
+    private val _statusMessage = MutableLiveData<String?>()
+    val statusMessage: LiveData<String?>
+        get() = _statusMessage
 
-    val showAssets = MutableLiveData<Pair<String, List<String>>?>(null)
+    private val _showActionSelector = MutableLiveData<Boolean>(false)
+    val showActionSelector: LiveData<Boolean>
+        get() = _showActionSelector
+
     var latestAssetId: String? = null
+    private val _showAssets = MutableLiveData<Pair<String, List<String>>?>(null)
+    val showAssets: LiveData<Pair<String, List<String>>?>
+        get() = _showAssets
 
-    val transportationLoc: MutableLiveData<Journey?> = MutableLiveData(null)
+    private val _transportationLoc: MutableLiveData<Journey?> = MutableLiveData(null)
+    val transportationLoc: LiveData<Journey?>
+        get() = _transportationLoc
 
     init {
-        initializePrefferedLocations()
+        initializePreferredLocations()
     }
 
-    private fun initializePrefferedLocations() {
+    /**
+     * Initialize the list of preferred locations in the database
+     */
+    private fun initializePreferredLocations() {
         viewModelScope.launch {
             val prefferedLocations = dataSource.getAll()
             if (prefferedLocations.isEmpty()) {
-                // Initialize preffered locations with some defaults
-                dataSource.insert(PrefferedLocation(name = "home", lat = 44.427513, lng = 26.101826))
+                // Initialize preferred locations with some defaults
+                dataSource.insert(PreferredLocation(name = "home", lat = 44.427513, lng = 26.101826))
             }
         }
     }
@@ -52,9 +66,9 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
             return
         }
 
-        showActionSelector.value = false
-        chatMessages.value?.add(text)
-        chatMessages.value = chatMessages.value
+        _showActionSelector.value = false
+        _chatMessages.value?.add(text)
+        _chatMessages.value = chatMessages.value
 
         viewModelScope.launch {
             try {
@@ -64,13 +78,14 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
                 val reply = result[0].text
                 Log.d(">>>>>>>> CONV AGENT", reply)
 
-                showAssets.value = null
-                transportationLoc.value = null
-                statusMessage.value = null
+                // Reset observed variables
+                _showAssets.value = null
+                _transportationLoc.value = null
+                _statusMessage.value = null
 
                 if (nluRes.message.intent.name == "mem_assistant.store_following_attr") {
                     // Link an asset to the mentioned description
-                    showActionSelector.value = true
+                    _showActionSelector.value = true
                 } else if (nluRes.message.intent.name == "mem_assistant.get_attr") {
                     // Show the user the list of assets linked to the mentioned description
 
@@ -80,16 +95,15 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
 
                     if (reply.contains("\n")) {
                         val assets = reply.split("\n").map { it.split("➜")[1].trim() }
-                        showAssets.value = Pair(description, assets)
+                        _showAssets.value = Pair(description, assets)
                     } else {
-                        showAssets.value = Pair(description, listOf(reply))
+                        _showAssets.value = Pair(description, listOf(reply))
                     }
                 } else if (nluRes.message.intent.name == "mem_assistant.get_transport") {
                     // Find transportation routes for the mentioned destination
                     val locations = nluRes.message.semanticRoles.filter { it.question == "unde" }
                     if (locations.isNotEmpty()) {
                         val destination = locations[locations.size - 1].extendedValue
-                        Log.d(">>>>>>>> ROUTES to", destination)
 
                         // Find exact destination for the mentioned one
                         val placesRes = StbInfoApi.retrofitService.getPlacesForKeyword("ro", destination)
@@ -99,23 +113,23 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
 
                             if (placesRes.places.isNotEmpty() && homeLoc != null) {
                                 val dest = placesRes.places[0]
-                                transportationLoc.value =
+                                _transportationLoc.value =
                                     Journey(homeLoc.lat, homeLoc.lng, dest.lat, dest.lng, "home", dest.name)
                             } else {
-                                statusMessage.value = "No place with this name was found"
+                                _statusMessage.value = "No place with this name was found"
                             }
                         }
                     } else {
-                        statusMessage.value = "Could not extract the location from your utterance"
+                        _statusMessage.value = "Could not extract the location from your utterance"
                     }
                 } else {
                     // Add the agent's reply to the chat list
-                    chatMessages.value?.add(reply)
+                    _chatMessages.value?.add(reply)
                 }
-                chatMessages.value = chatMessages.value
-                statusMessage.value = null
+                _chatMessages.value = chatMessages.value
+                _statusMessage.value = null
             } catch (e: Exception) {
-                statusMessage.value = "Conv agent API failure: ${e.message}"
+                _statusMessage.value = "Conv agent API failure: ${e.message}"
             }
         }
     }
@@ -127,15 +141,18 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
         viewModelScope.launch {
             try {
                 val result = ConvAgentApi.retrofitService.postMessageAndGetReply(ConvAgentRequest("user", id))
-                chatMessages.value?.add(result[0].text)
-                showActionSelector.value = false
-                chatMessages.value = chatMessages.value
+                _chatMessages.value?.add(result[0].text)
+                _showActionSelector.value = false
+                _chatMessages.value = chatMessages.value
             } catch (e: Exception) {
-                statusMessage.value = "Conv agent API failure: ${e.message}"
+                _statusMessage.value = "Conv agent API failure: ${e.message}"
             }
         }
     }
 
+    /**
+     * Create new image file
+     */
     fun getTmpFileUri(context: Context): Uri {
         val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
@@ -149,13 +166,13 @@ class ConvAgentChatViewModel(val dataSource: PADatabaseDao) : ViewModel() {
     }
 
     /**
-     * After the navigation has taken place, make sure navigateToSelectedProperty is set to null
+     * After the navigation has taken place, prevent another identical navigation
      */
     fun showAssetsPageDone() {
-        showAssets.value = null
+        _showAssets.value = null
     }
 
     fun showTransportationPageDone() {
-        transportationLoc.value = null
+        _transportationLoc.value = null
     }
 }

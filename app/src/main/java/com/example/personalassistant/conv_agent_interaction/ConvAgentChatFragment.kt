@@ -60,6 +60,7 @@ class ConvAgentChatFragment : Fragment() {
         val viewModelFactory = ConvAgentViewModelFactory(dataSource)
         viewModel = ViewModelProvider(this, viewModelFactory).get(ConvAgentChatViewModel::class.java)
 
+        // Listeners for the inline action buttons
         val linkPhotoListener = View.OnClickListener {
             lifecycleScope.launchWhenStarted {
                 viewModel.getTmpFileUri(applicationContext!!).let { uri ->
@@ -80,6 +81,7 @@ class ConvAgentChatFragment : Fragment() {
                     binding.chatEmptyStateMsg.visibility = View.INVISIBLE
                     binding.chatEmptyStateExtra.visibility = View.INVISIBLE
                 }
+                // Update the list of messages and scroll to the end
                 adapter.updateMessages(it, viewModel.showActionSelector.value ?: false)
                 binding.chat.smoothScrollToPosition(adapter.itemCount)
             }

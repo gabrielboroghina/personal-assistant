@@ -5,8 +5,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-@Entity(tableName = "preffered_locations")
-data class PrefferedLocation(
+@Entity(tableName = "preferred_locations")
+data class PreferredLocation(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0L,
 

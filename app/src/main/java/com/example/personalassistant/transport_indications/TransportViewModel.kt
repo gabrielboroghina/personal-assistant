@@ -12,7 +12,7 @@ import com.example.personalassistant.services.transport.StbInfoApi
 import kotlinx.coroutines.launch
 
 
-class TransportViewModel(val journey: Journey) : ViewModel() {
+class TransportViewModel(private val journey: Journey) : ViewModel() {
 
     private val _response = MutableLiveData<String>()
     val response: LiveData<String>

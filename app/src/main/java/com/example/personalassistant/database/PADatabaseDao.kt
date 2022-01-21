@@ -10,7 +10,7 @@ import androidx.room.Update
 interface PADatabaseDao {
 
     @Insert
-    suspend fun insert(entry: PrefferedLocation)
+    suspend fun insert(entry: PreferredLocation)
 
     /**
      * When updating a row with a value already set in a column,
@@ -19,22 +19,22 @@ interface PADatabaseDao {
      * @param entry new value to write
      */
     @Update
-    suspend fun update(entry: PrefferedLocation)
+    suspend fun update(entry: PreferredLocation)
 
     /**
-     * Selects ...
+     * Gets the preferred location with a given name
      *
      * @param key
      */
-    @Query("SELECT * from preffered_locations WHERE name = :name")
-    suspend fun getByName(name: String): PrefferedLocation?
+    @Query("SELECT * from preferred_locations WHERE name = :name")
+    suspend fun getByName(name: String): PreferredLocation?
 
     /**
      * Deletes all values from the table.
      *
      * This does not delete the table, only its contents.
      */
-    @Query("DELETE FROM preffered_locations")
+    @Query("DELETE FROM preferred_locations")
     suspend fun clear()
 
     /**
@@ -42,6 +42,6 @@ interface PADatabaseDao {
      *
      * sorted by start time in descending order.
      */
-    @Query("SELECT * FROM preffered_locations ORDER BY id DESC")
-    suspend fun getAll(): List<PrefferedLocation>
+    @Query("SELECT * FROM preferred_locations ORDER BY id DESC")
+    suspend fun getAll(): List<PreferredLocation>
 }

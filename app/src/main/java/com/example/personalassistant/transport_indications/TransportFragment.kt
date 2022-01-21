@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.personalassistant.R
 import com.example.personalassistant.databinding.FragmentTransportBinding
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 
 class TransportFragment : Fragment() {
     private val applicationContext by lazy { activity?.applicationContext }
@@ -42,6 +44,12 @@ class TransportFragment : Fragment() {
                 if (it.isNotEmpty()) {
                     adapter.updateRoutes(it)
                 }
+            }
+        }
+
+        viewModel.response.observe(viewLifecycleOwner) { status ->
+            status?.let {
+                Snackbar.make(view!!, status, BaseTransientBottomBar.LENGTH_SHORT).show()
             }
         }
 

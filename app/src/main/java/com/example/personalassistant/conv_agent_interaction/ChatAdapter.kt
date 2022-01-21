@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 private val ITEM_VIEW_TYPE_ACTION = 0
 private val ITEM_VIEW_TYPE_MSG = 1
 
-class ChatAdapter(val linkPhotoListener: View.OnClickListener) :
+class ChatAdapter(private val linkPhotoListener: View.OnClickListener) :
     ListAdapter<DataItem, RecyclerView.ViewHolder>(DiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
@@ -48,7 +48,7 @@ class ChatAdapter(val linkPhotoListener: View.OnClickListener) :
         return when (viewType) {
             ITEM_VIEW_TYPE_ACTION -> ActionsViewHolder.from(parent)
             ITEM_VIEW_TYPE_MSG -> MessageViewHolder.from(parent)
-            else -> throw ClassCastException("Unknown viewType ${viewType}")
+            else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
 

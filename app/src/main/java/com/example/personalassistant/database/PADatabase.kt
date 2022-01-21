@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 /**
  * A database that stores App data.
  */
-@Database(entities = [PrefferedLocation::class], version = 1, exportSchema = false)
+@Database(entities = [PreferredLocation::class], version = 1, exportSchema = false)
 abstract class PADatabase : RoomDatabase() {
 
     /**
