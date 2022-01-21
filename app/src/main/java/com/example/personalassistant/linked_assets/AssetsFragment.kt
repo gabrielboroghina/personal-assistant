@@ -59,6 +59,10 @@ class AssetsFragment : Fragment() {
         binding.photosGrid.adapter = adapter
 
         viewModel.assets.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                // Hide empty state illustration
+                binding.emptyState.visibility = View.INVISIBLE
+            }
             adapter.submitList(it)
         }
 

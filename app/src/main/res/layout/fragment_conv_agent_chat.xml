@@ -22,6 +22,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
+            android:id="@+id/empty_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -34,7 +35,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_no_messages"
-                android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@id/new_message"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/ic_no_messages" />

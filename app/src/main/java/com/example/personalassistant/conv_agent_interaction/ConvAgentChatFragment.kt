@@ -76,10 +76,7 @@ class ConvAgentChatFragment : Fragment() {
             it?.let {
                 if (it.isNotEmpty()) {
                     // Hide empty state illustration
-                    binding.chatEmptyState.visibility = View.INVISIBLE
-                    binding.chatEmptyStateTitle.visibility = View.INVISIBLE
-                    binding.chatEmptyStateMsg.visibility = View.INVISIBLE
-                    binding.chatEmptyStateExtra.visibility = View.INVISIBLE
+                    binding.emptyState.visibility = View.INVISIBLE
                 }
                 // Update the list of messages and scroll to the end
                 adapter.updateMessages(it, viewModel.showActionSelector.value ?: false)
