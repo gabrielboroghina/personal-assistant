@@ -1,22 +1,18 @@
-package com.example.personalassistant.services.transport
+package com.example.personalassistant.transport_indications
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
-import com.example.personalassistant.databinding.RouteSegmentBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.example.personalassistant.R
 import android.content.Context
 import com.example.personalassistant.databinding.RoutesBinding
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
+import com.example.personalassistant.services.transport.Route
 import kotlin.time.Duration.Companion.seconds
 
 

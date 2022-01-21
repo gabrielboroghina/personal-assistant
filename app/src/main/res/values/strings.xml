@@ -4,5 +4,7 @@
     <string name="btn_enter_value">Enter value</string>
     <string name="send_btn">Send</string>
     <string name="new_message_placeholder">Type a message</string>
-    <string name="chat_empty_state_msg">Start by sending a message to the assistant</string>
+    <string name="chat_empty_state_title">Start by sending a message to the assistant</string>
+    <string name="chat_empty_state_msg">You can try a request for storing/getting assets linked to a description or getting local transportation indications</string>
+    <string name="chat_empty_state_extra">Examples: \n \"Factura de gaze este aceasta\" \n \"Care e factura de gaze?\" \n \"Cum ajung la piața aviatorilor?\"</string>
 </resources>

@@ -10,21 +10,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.personalassistant.R
 import com.example.personalassistant.databinding.FragmentTransportBinding
-import com.example.personalassistant.services.transport.RouteAdapter
-import com.example.personalassistant.services.transport.RoutesAdapter
 
 class TransportFragment : Fragment() {
     private val applicationContext by lazy { activity?.applicationContext }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         (activity as AppCompatActivity).supportActionBar?.title = "Transportation"
 
         // Get a reference to the binding object and inflate the fragment views
         val binding: FragmentTransportBinding =
-                DataBindingUtil.inflate(inflater, R.layout.fragment_transport, container, false)
+            DataBindingUtil.inflate(inflater, R.layout.fragment_transport, container, false)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this

@@ -1,7 +1,6 @@
-package com.example.personalassistant.services.transport
+package com.example.personalassistant.transport_indications
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,11 +13,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.example.personalassistant.R
 import android.content.Context
+import com.example.personalassistant.services.transport.RouteSegment
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.minutes
 
 
-class RouteAdapter(private val context: Context) : ListAdapter<RouteSegment, RouteAdapter.RouteSegmentViewHolder>(DiffCallback()) {
+class RouteAdapter(private val context: Context) :
+    ListAdapter<RouteSegment, RouteAdapter.RouteSegmentViewHolder>(DiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
     override fun onBindViewHolder(holder: RouteSegmentViewHolder, position: Int) {
@@ -38,7 +38,9 @@ class RouteAdapter(private val context: Context) : ListAdapter<RouteSegment, Rou
         }
     }
 
-    class RouteSegmentViewHolder private constructor(val binding: RouteSegmentBinding, val context: Context) : RecyclerView.ViewHolder(binding.root) {
+    class RouteSegmentViewHolder private constructor(val binding: RouteSegmentBinding, val context: Context) :
+        RecyclerView.ViewHolder(binding.root) {
+
         fun bind(model: RouteSegment) {
             binding.transportName.text = model.transportName
             binding.duration.text = model.duration.milliseconds.toString()
@@ -73,7 +75,9 @@ class RouteAdapter(private val context: Context) : ListAdapter<RouteSegment, Rou
 
 class DiffCallback : DiffUtil.ItemCallback<RouteSegment>() {
     override fun areItemsTheSame(oldItem: RouteSegment, newItem: RouteSegment): Boolean {
-        return oldItem.duration == newItem.duration && oldItem.transportName == newItem.transportName && oldItem.transportType == newItem.transportType
+        return oldItem.duration == newItem.duration &&
+                oldItem.transportName == newItem.transportName &&
+                oldItem.transportType == newItem.transportType
     }
 
     @SuppressLint("DiffUtilEquals")

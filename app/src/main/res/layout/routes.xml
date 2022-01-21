@@ -24,7 +24,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#D5CFB3"
+                android:background="@color/yellow_green_crayola"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -39,6 +39,7 @@
                     android:id="@+id/transportation_option_duration"
                     android:layout_width="match_parent"
                     android:layout_height="14dp"
+                    android:layout_marginBottom="3dp"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="@android:color/black"

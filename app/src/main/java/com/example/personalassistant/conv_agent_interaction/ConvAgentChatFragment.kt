@@ -74,8 +74,11 @@ class ConvAgentChatFragment : Fragment() {
         viewModel.chatMessages.observe(viewLifecycleOwner) {
             it?.let {
                 if (it.isNotEmpty()) {
+                    // Hide empty state illustration
                     binding.chatEmptyState.visibility = View.INVISIBLE
+                    binding.chatEmptyStateTitle.visibility = View.INVISIBLE
                     binding.chatEmptyStateMsg.visibility = View.INVISIBLE
+                    binding.chatEmptyStateExtra.visibility = View.INVISIBLE
                 }
                 adapter.updateMessages(it, viewModel.showActionSelector.value ?: false)
                 binding.chat.smoothScrollToPosition(adapter.itemCount)

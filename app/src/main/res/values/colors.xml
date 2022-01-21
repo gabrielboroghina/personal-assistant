@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="purple_200">#FFBB86FC</color>
+    <color name="feldgrau">#596f62</color>
     <color name="purple_500">#004D50</color>
     <color name="purple_700">#007478</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="msg_bubble_bg">#606A65</color>
+    <color name="msg_bubble_bg">#1c3144</color>
+    <color name="text_cursor">#404040</color>
+    <color name="edit_text_bg">#E6E6E6</color>
+    <color name="asparagus">#7ea16b</color>
+    <color name="yellow_green_crayola">#c3d898</color>
+    <color name="route_segment_text">#1c3144</color>
+    <color name="empty_state_title">#7A7A7A</color>
+    <color name="empty_state_msg">#B1B1B1</color>
+    <color name="empty_state_extra">#FFB9D4DB</color>
 </resources>

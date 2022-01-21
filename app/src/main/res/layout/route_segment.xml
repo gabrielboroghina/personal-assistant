@@ -35,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/route_segment_text"
                     android:textSize="14sp" />
 
                 <TextView

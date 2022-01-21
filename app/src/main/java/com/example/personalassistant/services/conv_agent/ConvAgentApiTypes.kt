@@ -26,7 +26,6 @@ data class SemanticRole(
     val value: String,
     val lemma: String?,
     @Json(name = "ext_value") val extendedValue: String,
-//    val specifiers: []
 )
 
 data class NluProcessedMessage(
