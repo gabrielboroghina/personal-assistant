@@ -1,12 +1,15 @@
 package com.example.personalassistant.conv_agent_interaction
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.personalassistant.R
 import com.example.personalassistant.databinding.ActionSelectionBinding
 import com.example.personalassistant.databinding.MessageBubbleBinding
 import kotlinx.coroutines.CoroutineScope
@@ -22,7 +25,7 @@ class ChatAdapter(private val linkPhotoListener: View.OnClickListener) :
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
-    fun updateMessages(list: List<String>, showActionSelector: Boolean) {
+    fun updateMessages(list: List<Pair<Int, String>>, showActionSelector: Boolean) {
         adapterScope.launch {
             val items =
                 list.map { DataItem.MessageItem(it) } + if (showActionSelector) listOf(DataItem.ActionSelector) else listOf()
@@ -80,8 +83,13 @@ class ChatAdapter(private val linkPhotoListener: View.OnClickListener) :
     class MessageViewHolder private constructor(val binding: MessageBubbleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(message: String) {
-            binding.message.text = message
+        fun bind(message: Pair<Int, String>) {
+            binding.messageContainer.gravity = if (message.first == 0) Gravity.END else Gravity.START
+            if (message.first == 0) {
+                binding.message.backgroundTintList =
+                    ColorStateList.valueOf(this.itemView.resources.getColor(R.color.asparagus))
+            }
+            binding.message.text = message.second
             binding.executePendingBindings()
         }
 
@@ -109,8 +117,8 @@ class DiffCallback : DiffUtil.ItemCallback<DataItem>() {
 
 
 sealed class DataItem {
-    data class MessageItem(val message: String) : DataItem() {
-        override val id = message
+    data class MessageItem(val message: Pair<Int, String>) : DataItem() {
+        override val id = message.second
     }
 
     object ActionSelector : DataItem() {

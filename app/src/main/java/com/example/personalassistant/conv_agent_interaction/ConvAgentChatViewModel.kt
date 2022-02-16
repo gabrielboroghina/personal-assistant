@@ -20,8 +20,8 @@ import java.util.*
 
 class ConvAgentChatViewModel(private val dataSource: PADatabaseDao) : ViewModel() {
 
-    private val _chatMessages = MutableLiveData<MutableList<String>>(mutableListOf())
-    val chatMessages: LiveData<MutableList<String>>
+    private val _chatMessages = MutableLiveData<MutableList<Pair<Int, String>>>(mutableListOf())
+    val chatMessages: LiveData<MutableList<Pair<Int, String>>>
         get() = _chatMessages
 
     private val _statusMessage = MutableLiveData<String?>()
@@ -67,7 +67,7 @@ class ConvAgentChatViewModel(private val dataSource: PADatabaseDao) : ViewModel(
         }
 
         _showActionSelector.value = false
-        _chatMessages.value?.add(text)
+        _chatMessages.value?.add(Pair(0, text))
         _chatMessages.value = chatMessages.value
 
         viewModelScope.launch {
@@ -124,7 +124,7 @@ class ConvAgentChatViewModel(private val dataSource: PADatabaseDao) : ViewModel(
                     }
                 } else {
                     // Add the agent's reply to the chat list
-                    _chatMessages.value?.add(reply)
+                    _chatMessages.value?.add(Pair(1, reply))
                 }
                 _chatMessages.value = chatMessages.value
                 _statusMessage.value = null
@@ -141,7 +141,7 @@ class ConvAgentChatViewModel(private val dataSource: PADatabaseDao) : ViewModel(
         viewModelScope.launch {
             try {
                 val result = ConvAgentApi.retrofitService.postMessageAndGetReply(ConvAgentRequest("user", id))
-                _chatMessages.value?.add(result[0].text)
+                _chatMessages.value?.add(Pair(1, result[0].text))
                 _showActionSelector.value = false
                 _chatMessages.value = chatMessages.value
             } catch (e: Exception) {
